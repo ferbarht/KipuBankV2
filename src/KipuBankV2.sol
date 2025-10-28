@@ -24,6 +24,9 @@ contract KipuBankV2 is AccessControl {
 
     /// @notice Dirección usada para representar ETH como token nativo
     address public constant NATIVE_TOKEN = address(0);
+    /// @notice Dirección del oráculo Chainlink ETH/USD en Sepolia
+    address public constant PRICE_FEED_ADDRESS = 0x694AA1769357215DE4FAC081bf1f309aDC325306;
+
 
     /*//////////////////////////////////////////////////////////////
                                  ESTADO
@@ -189,16 +192,16 @@ contract KipuBankV2 is AccessControl {
     ///@notice Inicializa el contrato con límites y oráculo
     ///@param _withdrawalLimit Límite por retiro en wei
     ///@param _bankCapUSD Límite global de depósitos en USD (6 decimales)
-    ///@param _priceFeed Dirección del oráculo Chainlink ETH/USD
+    
     ///@dev Asigna roles, configura límites y permite depósito inicial opcional
     constructor(
         uint256 _withdrawalLimit,
-        uint256 _bankCapUSD,
-        address _priceFeed
+        uint256 _bankCapUSD
+        ///address _priceFeed
     ) payable {
         withdrawalLimit = _withdrawalLimit;
         bankCapUSD = _bankCapUSD;
-        priceFeed = AggregatorV3Interface(_priceFeed);
+        priceFeed = AggregatorV3Interface(PRICE_FEED_ADDRESS);
         _locked = 0;
 
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
